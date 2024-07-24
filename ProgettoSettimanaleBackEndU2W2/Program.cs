@@ -1,15 +1,40 @@
+using Microsoft.EntityFrameworkCore;
+using ProgettoSettimanaleBackEndU2W2.Data;
+using ProgettoSettimanaleBackEndU2W2.Interfaces;
+using ProgettoSettimanaleBackEndU2W2.Models;
+using ProgettoSettimanaleBackEndU2W2.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.SqlServer;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Aggiungi i servizi al contenitore
+builder.Services.AddDbContext<HotelContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<HotelContext>();
+
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IAdditionalServiceRepository, AdditionalServiceRepository>();
+builder.Services.AddScoped<IReservationDetailRepository, ReservationDetailRepository>();
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Configura la pipeline HTTP
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -18,10 +43,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Aggiungi autenticazione
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages(); // Aggiungi Razor Pages per Identity
 
 app.Run();

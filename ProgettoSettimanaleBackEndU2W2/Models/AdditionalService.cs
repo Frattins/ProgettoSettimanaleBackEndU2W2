@@ -2,12 +2,11 @@
 {
     public class AdditionalService
     {
-        public int ServiceID { get; set; }
+        public int ServiceID { get; set; } // Chiave primaria
         public int ReservationID { get; set; }
         public string ServiceName { get; set; }
         public DateTime ServiceDate { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-
     }
 }
