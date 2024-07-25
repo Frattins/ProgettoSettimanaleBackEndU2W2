@@ -5,10 +5,9 @@
     Layout = "_Layout";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>Register</h2>
 
-<form id="registerFormAjax" method="post">
-    @Html.AntiForgeryToken()
+<form id="registerFormAjax">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" id="Email" />
@@ -27,33 +26,29 @@
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-            $("#registerFormAjax").submit(function (event) {
-                event.preventDefault();
-                var token = $('input[name="__RequestVerificationToken"]').val();
-                $.ajax({
-                    type: "POST",
-                    url: "/api/account/register",
-                    data: JSON.stringify({
-                        __RequestVerificationToken: token,
-                        Email: $("#Email").val(),
-                        Password: $("#Password").val(),
-                        ConfirmPassword: $("#ConfirmPassword").val()
-                    }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        alert("Registration successful");
-                        window.location.href = "/Account/Login";
-                    },
-                    error: function (response) {
-                        alert("An error occurred: " + response.responseJSON.message);
-                    }
-                });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#registerFormAjax").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/api/account/register",
+                data: JSON.stringify({
+                    Email: $("#Email").val(),
+                    Password: $("#Password").val(),
+                    ConfirmPassword: $("#ConfirmPassword").val()
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    alert("Registration successful");
+                    window.location.href = "/Account/Login";
+                },
+                error: function (response) {
+                    alert("An error occurred: " + response.responseJSON.message);
+                }
             });
         });
-    </script>
-}
+    });
+</script>

@@ -5,12 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace ProgettoSettimanaleBackEndU2W2.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -23,7 +22,13 @@ namespace ProgettoSettimanaleBackEndU2W2.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("login")]
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost("api/account/login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (ModelState.IsValid)
@@ -54,7 +59,13 @@ namespace ProgettoSettimanaleBackEndU2W2.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("register")]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost("api/account/register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (ModelState.IsValid)
