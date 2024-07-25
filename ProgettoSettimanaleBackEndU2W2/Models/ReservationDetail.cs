@@ -2,7 +2,7 @@
 {
     public class ReservationDetail
     {
-        public int DetailID { get; set; }
+        public int DetailID { get; set; } // Chiave primaria
         public int ReservationID { get; set; }
         public string RoomNumber { get; set; }
         public string Period { get; set; }

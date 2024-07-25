@@ -18,9 +18,11 @@ namespace ProgettoSettimanaleBackEndU2W2.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configurazioni specifiche per le entità
             modelBuilder.Entity<AdditionalService>()
-                .HasKey(a => a.ServiceID); // Definisci ServiceID come chiave primaria
+                .HasKey(a => a.ServiceID);
+
+            modelBuilder.Entity<ReservationDetail>()
+                .HasKey(r => r.DetailID);
         }
     }
 }
