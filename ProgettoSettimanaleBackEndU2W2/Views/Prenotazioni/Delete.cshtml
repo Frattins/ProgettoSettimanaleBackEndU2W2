@@ -1,0 +1,53 @@
+﻿@model ProgettoSettimanaleBackEndU2W2.Models.Reservation
+
+<h2>Elimina Prenotazione</h2>
+
+<h3>Sei sicuro di voler eliminare questa?</h3>
+<div>
+    <h4>Prenotazione</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClientID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClientID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReservationDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReservationDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StayFrom)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StayFrom)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StayTo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StayTo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Deposit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Deposit)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ReservationID" />
+        <button type="submit" class="btn btn-danger">Elimina</button> |
+        <a asp-action="Index">Indietro alla Lista</a>
+    </form>
+</div>

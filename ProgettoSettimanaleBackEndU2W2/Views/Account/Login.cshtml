@@ -2,13 +2,11 @@
 
 @{
     ViewData["Title"] = "Login";
-    Layout = "_Layout";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <form id="loginFormAjax" method="post">
-    @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" id="Email" />
@@ -28,12 +26,10 @@
         $(document).ready(function () {
             $("#loginFormAjax").submit(function (event) {
                 event.preventDefault();
-                var token = $('input[name="__RequestVerificationToken"]').val();
                 $.ajax({
                     type: "POST",
                     url: "/api/account/login",
                     data: JSON.stringify({
-                        __RequestVerificationToken: token,
                         Email: $("#Email").val(),
                         Password: $("#Password").val()
                     }),
@@ -41,7 +37,6 @@
                     dataType: "json",
                     success: function (response) {
                         alert("Login successful");
-                        localStorage.setItem("token", response.token);
                         window.location.href = "/";
                     },
                     error: function (response) {

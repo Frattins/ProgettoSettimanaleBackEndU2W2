@@ -1,8 +1,12 @@
-﻿namespace ProgettoSettimanaleBackEndU2W2.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProgettoSettimanaleBackEndU2W2.Models
 {
     public class Reservation
     {
+        [Key]
         public int ReservationID { get; set; }
+
         public int ClientID { get; set; }
         public int RoomID { get; set; }
         public DateTime ReservationDate { get; set; }

@@ -1,69 +1,32 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using ProgettoSettimanaleBackEndU2W2.Data;
-using ProgettoSettimanaleBackEndU2W2.Models;
-using System.Text;
+using ProgettoSettimanaleBackEndU2W2.DAO;
+using ProgettoSettimanaleBackEndU2W2.Services;
+using ProgettoSettimanaleBackEndU2W2.Interface;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy",
-        builder => builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-});
-
-// Configura i servizi rimanenti
+// Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<HotelContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<HotelContext>()
-    .AddDefaultTokenProviders();
+// Recupera la stringa di connessione dalla configurazione
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+// Registra i servizi con la stringa di connessione
+builder.Services.AddScoped<IClienteDao>(provider => new ClienteDao(connectionString));
+builder.Services.AddScoped<IServizioDao>(provider => new ServizioDao(connectionString));
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
-
-app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapFallbackToController("Index", "Home");
-
 
 app.Run();

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Register";
-    Layout = "_Layout";
 }
 
 <h2>Register</h2>
@@ -26,29 +25,31 @@
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#registerFormAjax").submit(function (event) {
-            event.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "/api/account/register",
-                data: JSON.stringify({
-                    Email: $("#Email").val(),
-                    Password: $("#Password").val(),
-                    ConfirmPassword: $("#ConfirmPassword").val()
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    alert("Registration successful");
-                    window.location.href = "/Account/Login";
-                },
-                error: function (response) {
-                    alert("An error occurred: " + response.responseJSON.message);
-                }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#registerFormAjax").submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/api/account/register",
+                    data: JSON.stringify({
+                        Email: $("#Email").val(),
+                        Password: $("#Password").val(),
+                        ConfirmPassword: $("#ConfirmPassword").val()
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        alert("Registration successful");
+                        window.location.href = "/Account/Login";
+                    },
+                    error: function (response) {
+                        alert("An error occurred: " + response.responseJSON.message);
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
+}

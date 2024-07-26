@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProgettoSettimanaleBackEndU2W2.Models.AdditionalService>
+
+<h2>Servizi</h2>
+
+<p>
+    <a asp-controller="Servizi" asp-action="Create">Aggiungi Nuovo Servizio</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome Servizio</th>
+            <th>Quantità</th>
+            <th>Prezzo</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in Model)
+        {
+            <tr>
+                <td>@service.ServiceName</td>
+                <td>@service.Quantity</td>
+                <td>@service.Price</td>
+                <td>
+                    <a asp-controller="Servizi" asp-action="Edit" asp-route-id="@service.ServiceID">Modifica</a> |
+                    <a asp-controller="Servizi" asp-action="Details" asp-route-id="@service.ServiceID">Dettagli</a> |
+                    <a asp-controller="Servizi" asp-action="Delete" asp-route-id="@service.ServiceID">Elimina</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

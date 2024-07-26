@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProgettoSettimanaleBackEndU2W2.Models.Room>
+
+<h2>Camere</h2>
+
+<p>
+    <a asp-controller="Camere" asp-action="Create">Aggiungi Nuova Camera</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
+            <tr>
+                <td>@room.RoomNumber</td>
+                <td>@room.Description</td>
+                <td>@room.Type</td>
+                <td>
+                    <a asp-controller="Camere" asp-action="Edit" asp-route-id="@room.RoomID">Modifica</a> |
+                    <a asp-controller="Camere" asp-action="Details" asp-route-id="@room.RoomID">Dettagli</a> |
+                    <a asp-controller="Camere" asp-action="Delete" asp-route-id="@room.RoomID">Elimina</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

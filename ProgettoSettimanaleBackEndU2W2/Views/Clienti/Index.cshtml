@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProgettoSettimanaleBackEndU2W2.Models.Client>
+
+<h2>Clienti</h2>
+
+<p>
+    <a asp-controller="Clienti" asp-action="Create">Aggiungi Nuovo Cliente</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model)
+        {
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.Surname</td>
+                <td>@client.Email</td>
+                <td>
+                    <a asp-controller="Clienti" asp-action="Edit" asp-route-id="@client.ClientID">Modifica</a> |
+                    <a asp-controller="Clienti" asp-action="Details" asp-route-id="@client.ClientID">Dettagli</a> |
+                    <a asp-controller="Clienti" asp-action="Delete" asp-route-id="@client.ClientID">Elimina</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

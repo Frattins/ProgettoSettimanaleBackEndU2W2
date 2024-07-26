@@ -1,3 +1,5 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
 namespace ProgettoSettimanaleBackEndU2W2.Models
 {
     public class ErrorViewModel

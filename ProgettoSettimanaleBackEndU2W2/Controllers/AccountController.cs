@@ -1,103 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using ProgettoSettimanaleBackEndU2W2.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using ProgettoSettimanaleBackEndU2W2.Models;
+using ProgettoSettimanaleBackEndU2W2.Services;
 
 namespace ProgettoSettimanaleBackEndU2W2.Controllers
 {
-    public class AccountController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+        public AccountController(IAuthService authService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            _authService = authService;
         }
 
-        [HttpGet]
-        public IActionResult Login()
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Client model)
         {
-            return View();
-        }
-
-        [HttpPost("api/account/login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
-        {
-            if (ModelState.IsValid)
+            var result = await _authService.LoginAsync(model.Email, model.Password);
+            if (result)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-                {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                            new Claim(ClaimTypes.Name, user.Id.ToString())
-                        }),
-                        Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:DurationInMinutes"])),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                    };
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    return Ok(new
-                    {
-                        Token = tokenHandler.WriteToken(token),
-                        Expiration = token.ValidTo
-                    });
-                }
-                return Unauthorized(new { message = "Invalid credentials" });
+                return Ok(new { message = "Login successful" });
             }
-            return BadRequest(ModelState);
+            return Unauthorized(new { message = "Invalid credentials" });
         }
 
-        [HttpGet]
-        public IActionResult Register()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] Client model)
         {
-            return View();
-        }
-
-        [HttpPost("api/account/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
-        {
-            if (ModelState.IsValid)
+            if (model.Password != model.ConfirmPassword)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                            new Claim(ClaimTypes.Name, user.Id.ToString())
-                        }),
-                        Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:DurationInMinutes"])),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                    };
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    return Ok(new
-                    {
-                        Token = tokenHandler.WriteToken(token),
-                        Expiration = token.ValidTo
-                    });
-                }
-
-                return BadRequest(result.Errors);
+                return BadRequest(new { message = "Passwords do not match" });
             }
 
-            return BadRequest(ModelState);
+            var result = await _authService.RegisterAsync(model);
+            if (result)
+            {
+                return Ok(new { message = "Registration successful" });
+            }
+            return BadRequest(new { message = "Registration failed" });
         }
     }
 }

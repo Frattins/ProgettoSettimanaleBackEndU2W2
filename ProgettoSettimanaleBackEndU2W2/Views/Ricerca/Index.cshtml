@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ProgettoSettimanaleBackEndU2W2.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Search Reservations";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="get" asp-controller="Ricerca" asp-action="Index">
+    <div class="form-group">
+        <label for="searchTerm">Search Term</label>
+        <input type="text" class="form-control" id="searchTerm" name="searchTerm" value="@ViewData["searchTerm"]" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Reservation ID</th>
+            <th>Client ID</th>
+            <th>Room ID</th>
+            <th>Reservation Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ReservationID</td>
+                <td>@item.ClientID</td>
+                <td>@item.RoomID</td>
+                <td>@item.ReservationDate</td>
+                <td>
+                    <a asp-controller="Prenotazioni" asp-action="Details" asp-route-id="@item.ReservationID">Details</a> |
+                    <a asp-controller="Prenotazioni" asp-action="Edit" asp-route-id="@item.ReservationID">Edit</a> |
+                    <a asp-controller="Prenotazioni" asp-action="Delete" asp-route-id="@item.ReservationID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

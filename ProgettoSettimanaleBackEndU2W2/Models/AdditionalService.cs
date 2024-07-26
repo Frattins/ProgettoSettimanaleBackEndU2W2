@@ -1,8 +1,12 @@
-﻿namespace ProgettoSettimanaleBackEndU2W2.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProgettoSettimanaleBackEndU2W2.Models
 {
     public class AdditionalService
     {
-        public int ServiceID { get; set; } // Chiave primaria
+        [Key]
+        public int ServiceID { get; set; }
+
         public int ReservationID { get; set; }
         public string ServiceName { get; set; }
         public DateTime ServiceDate { get; set; }
